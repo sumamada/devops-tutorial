@@ -18,10 +18,9 @@ node {
         /* Ideally, we would run a test framework against our image.
          * For this example, we're using a Volkswagen-type approach ;-) */
 
-        steps {
         bat 'docker run --rm edureka1/edureka echo Tests passed'
-        }
     }
+    
 
     stage('Push image') {
         /* Finally, we'll push the image with two tags:
