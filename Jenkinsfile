@@ -22,12 +22,13 @@ node {
     }
     
 
-    stage('Push image') {
-    bat '''
-    docker tag madalasuma/test:%BUILD_NUMBER% madalasuma/test:%BUILD_NUMBER%
-    docker tag madalasuma/test:latest madalasuma/test:latest
+     stage('Push image') {
+        bat '''
+        docker tag madalasuma/test:%BUILD_NUMBER% madalasuma/test:%BUILD_NUMBER%
+        docker tag madalasuma/test:latest madalasuma/test:latest
 
-    docker push madalasuma/test:%BUILD_NUMBER%
-    docker push madalasuma/test:latest
-    '''
+        docker push madalasuma/test:%BUILD_NUMBER%
+        docker push madalasuma/test:latest
+        '''
+    }
 }
