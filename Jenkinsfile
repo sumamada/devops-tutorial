@@ -2,33 +2,32 @@ node {
     def app
 
     stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
         checkout scm
     }
 
     stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        app = docker.build("madalasuma/test")
+        app = docker.build("madalasuma/test:${BUILD_NUMBER}")
     }
 
     stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) */
-
-        bat 'docker run --rm madalasuma/test echo Tests passed'
+        bat "docker run --rm madalasuma/test:${BUILD_NUMBER} echo Tests passed"
     }
-    
 
-     stage('Push image') {
-        bat '''
-        docker tag madalasuma/test:%BUILD_NUMBER% madalasuma/test:%BUILD_NUMBER%
-        docker tag madalasuma/test:latest madalasuma/test:latest
+    stage('Push image') {
+        withCredentials([usernamePassword(
+            credentialsId: 'docker-hub-credentials',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
 
-        docker push madalasuma/test:%BUILD_NUMBER%
-        docker push madalasuma/test:latest
-        '''
+            bat """
+            docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+
+            docker tag madalasuma/test:${BUILD_NUMBER} madalasuma/test:latest
+
+            docker push madalasuma/test:${BUILD_NUMBER}
+            docker push madalasuma/test:latest
+            """
+        }
     }
 }
