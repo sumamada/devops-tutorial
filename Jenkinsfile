@@ -11,14 +11,14 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("edureka1/edureka")
+        app = docker.build("madalasuma/test")
     }
 
     stage('Test image') {
         /* Ideally, we would run a test framework against our image.
          * For this example, we're using a Volkswagen-type approach ;-) */
 
-        bat 'docker run --rm edureka1/edureka echo Tests passed'
+        bat 'docker run --rm madalasuma/test echo Tests passed'
     }
     
 
